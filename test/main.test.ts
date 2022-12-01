@@ -1,8 +1,8 @@
 import axios from "axios";
 
 test("Should create a transaction", async function () {
-  const code = Math.floor(Math.random() * 1000);
-  axios({
+  const code = `${Math.floor(Math.random() * 1000)}}`;
+  await axios({
     url: "http://localhost:3000/transactions",
     method: "post",
     data: {
@@ -12,4 +12,12 @@ test("Should create a transaction", async function () {
       paymentMethod: "credit_card",
     },
   });
+  const response = await axios({
+    url: `http://localhost:3000/transactions/${code}`,
+    method: "get",
+  });
+  const transaction = response.data;
+  expect(transaction.code).toBe(code);
+  expect(transaction.amount).toBe(1000);
+  expect(transaction.paymentMethod).toBe("credit_card");
 });
