@@ -2,10 +2,13 @@ import CreateTransaction from "../src/application/CreateTransaction";
 import GetTransaction from "../src/application/GetTransaction";
 import PostregSQLAdapter from "../src/infra/database/PostgreSQLAdapter";
 import TransactionDatabaseRepository from "../src/infra/repository/TransactionDatabaseRepository";
+import TransactionMemoryRepository from "../src/infra/repository/TransactionMemoryRepository";
 
 test("Should create a transaction", async function () {
   const connection = new PostregSQLAdapter();
   const transactionRepository = new TransactionDatabaseRepository(connection);
+  // const transactionRepository = new TransactionMemoryRepository();
+  
   const code = `${Math.floor(Math.random() * 1000)}}`;
   const createTransaction = new CreateTransaction(transactionRepository);
   const input = {
