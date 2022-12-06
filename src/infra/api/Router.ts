@@ -7,8 +7,6 @@ export default class Router {
   constructor(readonly httpServer: HttpServer, readonly transactionRepository: TransactionRepository) {};
 
   async init() {
-
-
     this.httpServer.on("post", "/transactions", async (params: any, body: any) => {
       const createTransaction = new CreateTransaction(this.transactionRepository);
       await createTransaction.execute(body);

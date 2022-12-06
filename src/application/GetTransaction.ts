@@ -6,15 +6,13 @@ export default class GetTransaction {
   async execute(code: string): Promise<OutPut> {
     const transaction = await this.transactionRepository.get(code);
     return transaction;
-
-
-  }
-}
+  };
+};
 
 type OutPut = {
   code: string,
   amount: number,
   numberInstallments: number,
-  paymentMethod: string
-  installments: { number: number, amount: number }[];
+  paymentMethod: string,
+  installments: { number: number, amount: number }[],
 };

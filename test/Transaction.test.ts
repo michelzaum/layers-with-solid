@@ -1,6 +1,6 @@
 import Transaction from "../src/domain/entity/Transaction";
 
-test("Deve criar uma transaction", function() {
+test("Should create a transaction", function() {
   const transaction = new Transaction("987", 1000, 12, "credit_card");
   transaction.generateInstallments();
   expect(transaction.installments).toHaveLength(12);

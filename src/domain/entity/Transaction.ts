@@ -3,8 +3,13 @@ import Installments from "./Installments";
 export default class Transaction {
   installments: Installments[];
 
-  constructor(readonly code: string, readonly amount: number, readonly numberInstallments: number, readonly paymentMethod: string) {
-    this.installments = []
+  constructor(
+    readonly code: string,
+    readonly amount: number,
+    readonly numberInstallments: number,
+    readonly paymentMethod: string
+    ) {
+    this.installments = [];
   };
 
   generateInstallments() {
@@ -16,6 +21,7 @@ export default class Transaction {
       if (number === this.numberInstallments) {
         amount += diff;
       };
+      
       this.installments.push(new Installments(number, amount));
       number++;
     };

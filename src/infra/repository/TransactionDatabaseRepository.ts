@@ -14,16 +14,30 @@ export default class TransactionDatabaseRepository implements TransactionReposit
     `, [
       transaction.code, transaction.amount, transaction.numberInstallments, transaction.paymentMethod,
     ]);
+
     for (const installment of transaction.installments) {
-      await this.connection.query("insert into branas.installments (code, number, amount) values ($1, $2, $3)", [transaction.code, installment.number, installment.amount]);
+      await this.connection.query(`
+      insert into branas.installments (code, number, amount) values ($1, $2, $3)
+      `, [transaction.code, installment.number, installment.amount]);
     };
   };
 
   async get(code: string): Promise<Transaction> {
-    const transactionData = await this.connection.one("select * from branas.transaction where code = $1", [code]);
-    const transaction = new Transaction(transactionData.code, parseFloat(transactionData.amount), transactionData.number_installments, transactionData.payment_method);
+    const transactionData = await this.connection.one(`
+    select * from branas.transaction where code = $1
+    `, [code]);
 
-    const installmentsData = await this.connection.query("select * from branas.installment where code = $1", [code]);
+    const transaction = new Transaction(
+      transactionData.code,
+      parseFloat(transactionData.amount),
+      transactionData.number_installments,
+      transactionData.payment_method
+    );
+
+    const installmentsData = await this.connection.query(`
+    select * from branas.installment where code = $1
+    `, [code]);
+    
     for (const installmentData of installmentsData) {
       const installment = new Installments(installmentData.number, parseFloat(installmentData.amount));
       transaction.installments.push(installment);

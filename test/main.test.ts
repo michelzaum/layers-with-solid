@@ -12,10 +12,12 @@ test("Should create a transaction", async function () {
       paymentMethod: "credit_card",
     },
   });
+
   const response = await axios({
     url: `http://localhost:3000/transactions/${code}`,
     method: "get",
   });
+  
   const transaction = response.data;
   expect(transaction.code).toBe(code);
   expect(transaction.amount).toBe(1000);
