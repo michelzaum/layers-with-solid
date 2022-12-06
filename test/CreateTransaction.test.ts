@@ -1,5 +1,5 @@
-import axios from "axios";
 import CreateTransaction from "../src/application/CreateTransaction";
+import GetTransaction from "../src/application/GetTransaction";
 
 test("Should create a transaction", async function () {
   const code = `${Math.floor(Math.random() * 1000)}}`;
@@ -11,8 +11,9 @@ test("Should create a transaction", async function () {
     paymentMethod: "credit_card",
   };
   await createTransaction.execute(input);
-  
-  const transaction = response.data;
+
+  const getTransaction = new GetTransaction();
+  const transaction = await getTransaction.execute(code);
   expect(transaction.code).toBe(code);
   expect(transaction.amount).toBe(1000);
   expect(transaction.paymentMethod).toBe("credit_card");
