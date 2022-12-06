@@ -1,32 +1,23 @@
-import express, { Request, Response } from "express";
 import CreateTransaction from "../../application/CreateTransaction";
 import GetTransaction from "../../application/GetTransaction";
-import PostregSQLAdapter from "../database/PostgreSQLAdapter";
-import TransactionDatabaseRepository from "../repository/TransactionDatabaseRepository";
+import TransactionRepository from "../../domain/repository/TransactionRepository";
+import HttpServer from "./Httpserver";
 
 export default class Router {
-  constructor() {};
+  constructor(readonly httpServer: HttpServer, readonly transactionRepository: TransactionRepository) {};
 
   async init() {
-    const app = express();
-    app.use(express.json());
 
-    const connection = new PostregSQLAdapter();
-    const transactionRepository = new TransactionDatabaseRepository(connection);
 
-    app.post("/transactions", async function (req: Request, res: Response) {
-      const createTransaction = new CreateTransaction(transactionRepository);
-      await createTransaction.execute(req.body);
-
-      res.end();
+    this.httpServer.on("post", "/transactions", async (params: any, body: any) => {
+      const createTransaction = new CreateTransaction(this.transactionRepository);
+      await createTransaction.execute(body);
     });
 
-    app.get("/transactions/:code", async function(req: Request, res: Response) {
-      const getTransaction = new GetTransaction(transactionRepository);
-      const transaction = await getTransaction.execute(req.params.code);
-      res.json(transaction);
+    this.httpServer.on("get", "/transactions/:code", async (params: any, body: any) => {
+      const getTransaction = new GetTransaction(this.transactionRepository);
+      const transaction = await getTransaction.execute(params.code);
+      return transaction;
     });
-
-    app.listen(3000);
   };
 };
