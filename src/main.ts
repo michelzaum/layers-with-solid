@@ -1,11 +1,13 @@
 import express, { Request, Response } from 'express';
 import CreateTransaction from './application/CreateTransaction';
 import GetTransaction from './application/GetTransaction';
+import PostregSQLAdapter from './infra/database/PostgreSQLAdapter';
 import TransactionDatabaseRepository from './infra/repository/TransactionDatabaseRepository';
 
 const app = express();
 app.use(express.json());
-const transactionRepository = new TransactionDatabaseRepository();
+const connection = new PostregSQLAdapter();
+const transactionRepository = new TransactionDatabaseRepository(connection);
 
 app.post("/transactions", async function (req: Request, res: Response) {
   const createTransaction = new CreateTransaction(transactionRepository);
