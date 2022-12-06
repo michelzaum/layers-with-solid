@@ -1,23 +1,13 @@
-import pgp from 'pg-promise';
+import TransactionRepository from '../domain/repository/TransactionRepository';
 
 export default class GetTransaction {
-  constructor() {};
+  constructor(readonly transactionRepository: TransactionRepository) {};
 
   async execute(code: string): Promise<OutPut> {
-    const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-    const transaction = connection.one("select * from branas.transaction where code = $1", [code]);
-    transaction.amount = parseFloat(transaction.amount);
-    transaction.paymentMethod = transaction.payment_method = parseFloat(transaction.amount);
-    const installments = await connection.query("select * from branas.installment where code = $1", [code]);
-    for (const installment of installments) {
-      installment.amount = parseFloat(installment.amount);
-    };
-  
-    transaction.installments = installments;
-    console.log(transaction);
-    
-    await connection.$pool.end();
+    const transaction = await this.transactionRepository.get(code);
     return transaction;
+
+
   }
 }
 

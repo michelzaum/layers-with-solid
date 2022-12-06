@@ -14,7 +14,7 @@ test("Should create a transaction", async function () {
   };
   await createTransaction.execute(input);
 
-  const getTransaction = new GetTransaction();
+  const getTransaction = new GetTransaction(transactionRepository);
   const transaction = await getTransaction.execute(code);
   expect(transaction.code).toBe(code);
   expect(transaction.amount).toBe(1000);
