@@ -1,9 +1,11 @@
 import CreateTransaction from "../src/application/CreateTransaction";
 import GetTransaction from "../src/application/GetTransaction";
+import TransactionDatabaseRepository from "../src/infra/repository/TransactionDatabaseRepository";
 
 test("Should create a transaction", async function () {
+  const transactionRepository = new TransactionDatabaseRepository();
   const code = `${Math.floor(Math.random() * 1000)}}`;
-  const createTransaction = new CreateTransaction();
+  const createTransaction = new CreateTransaction(transactionRepository);
   const input = {
     code,
     amount: 1000,
